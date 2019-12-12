@@ -1,0 +1,11 @@
+
+# IDE
+.idea
+.vscode
+.settings
+.classpath
+.project
+swivelassignment.iml
+
+#build
+target
