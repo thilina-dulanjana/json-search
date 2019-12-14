@@ -21,7 +21,6 @@ public class UserService {
         Gson gson = new Gson();
         FileService fs = new FileService();
         InputStream is = fs.getFileFromResources(fileName);
-        System.out.println(is);
         List<User> userList = null;
         try (Reader reader = new BufferedReader(new InputStreamReader(is))) {
             Type userListType = new TypeToken<ArrayList<User>>() {
@@ -35,11 +34,16 @@ public class UserService {
         return userList;
     }
 
-    public User findUser(List<User> userList, Integer id) {
-        User user = userList.stream() 
+    public User findUser(List<User> userList, String searchTerm, String searchValue) {
+        if (searchTerm.equals("_id")) {
+            Integer id = Integer.parseInt(searchValue);
+
+            User user = userList.stream() 
                 .filter(x -> id.equals(x.getId())) 
                 .findAny()
                 .orElse(null);
-        return user;
+            return user;
+        }
+        return null;        
     }
 }
