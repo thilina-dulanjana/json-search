@@ -1,4 +1,4 @@
-package com.swivel.assignment.service;
+package com.swivel.assignment.service.impl;
 
 import java.io.InputStream;
 

@@ -1,7 +1,13 @@
 package com.swivel.assignment;
 
+import com.google.gson.annotations.SerializedName;
 import com.swivel.assignment.entity.*;
-import com.swivel.assignment.service.UserService;
+import com.swivel.assignment.service.EntityService;
+import com.swivel.assignment.service.impl.OrganizationService;
+import com.swivel.assignment.service.impl.TicketService;
+import com.swivel.assignment.service.impl.UserService;
+
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,6 +31,27 @@ public class Main {
         UserService userService = new UserService();
         List<User> userList = userService.getUserList("jsonStore/users.json");
         User user = userService.findUser(userList, searchTerm, searchValue);
-        System.out.println(user.getName());
+
+        for (Field field : user.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String name = field.getAnnotation(SerializedName.class).value();
+            Object value = null;
+            try {
+                value = field.get(user);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            System.out.printf("%s: %s%n", name, value);
+        }
+
+
+        OrganizationService organizationService = new OrganizationService();
+        Organization organization = organizationService.findOrganization("jsonStore/organizations.json", "_id", user.getOrganizationId()+"");
+        System.out.println("Organization: " + organization.getName());
+
+        EntityService ticketService = new TicketService();
+        Entity ticket = ticketService.findEntity("jsonStore/tickets.json", "submitter_id", user.getId()+"");
+        System.out.println("Movie Title :" + ticket.getSubject());
+
     }
 }

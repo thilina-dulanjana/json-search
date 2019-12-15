@@ -1,6 +1,4 @@
-package com.swivel.assignment.service;
-
-import com.swivel.assignment.service.FileService;
+package com.swivel.assignment.service.impl;
 
 import java.io.BufferedReader;
 import com.swivel.assignment.entity.User;
@@ -21,17 +19,16 @@ public class UserService {
         Gson gson = new Gson();
         FileService fs = new FileService();
         InputStream is = fs.getFileFromResources(fileName);
-        List<User> userList = null;
         try (Reader reader = new BufferedReader(new InputStreamReader(is))) {
             Type userListType = new TypeToken<ArrayList<User>>() {
             }.getType();
-            userList = gson.fromJson(reader, userListType);            
+            return gson.fromJson(reader, userListType);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
-        return userList;
+        return null;
     }
 
     public User findUser(List<User> userList, String searchTerm, String searchValue) {
@@ -39,7 +36,7 @@ public class UserService {
             Integer id = Integer.parseInt(searchValue);
 
             User user = userList.stream() 
-                .filter(x -> id.equals(x.getId())) 
+                .filter(x -> x.getId().equals(id))
                 .findAny()
                 .orElse(null);
             return user;
