@@ -3,7 +3,6 @@ package com.swivel.assignment.service.impl;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.swivel.assignment.entity.Organization;
 import com.swivel.assignment.entity.Ticket;
 import com.swivel.assignment.service.EntityService;
 
@@ -20,10 +19,9 @@ public class TicketService implements EntityService<Ticket> {
         List<Ticket> ticketList = getEntityList(fileName);
         if (searchTerm.equals("submitter_id")) {
             Integer id = Integer.parseInt(searchValue);
-            List<Ticket> ticket = ticketList.stream()
+            return ticketList.stream()
                     .filter(x -> id.equals(x.getSubmitterId()))
-                    .collect(Collectors.toList());  
-            return ticket;
+                    .collect(Collectors.toList());
         }
         return null;
     }
@@ -37,9 +35,7 @@ public class TicketService implements EntityService<Ticket> {
             Type ticketListType = new TypeToken<ArrayList<Ticket>>() {
             }.getType();
             return gson.fromJson(reader, ticketListType);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JsonSyntaxException e) {
+        } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
         }
         return null;
