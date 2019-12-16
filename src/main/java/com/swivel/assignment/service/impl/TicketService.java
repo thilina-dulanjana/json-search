@@ -11,26 +11,25 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class TicketService implements EntityService {
+public class TicketService implements EntityService<Ticket> {
 
     @Override
-    public Ticket findEntity(String fileName, String searchTerm, String searchValue) {
+    public List<Ticket> findEntity(String fileName, String searchTerm, String searchValue) {
         List<Ticket> ticketList = getEntityList(fileName);
-        if (searchTerm.equals("_id")) {
+        if (searchTerm.equals("submitter_id")) {
             Integer id = Integer.parseInt(searchValue);
-
-            Ticket ticket = ticketList.stream()
-                    .filter(x -> id.equals(x.getId()))
-                    .findAny()
-                    .orElse(null);
+            List<Ticket> ticket = ticketList.stream()
+                    .filter(x -> id.equals(x.getSubmitterId()))
+                    .collect(Collectors.toList());  
             return ticket;
         }
         return null;
     }
 
     @Override
-    public List getEntityList(String fileName) {
+    public List<Ticket> getEntityList(String fileName) {
         Gson gson = new Gson();
         FileService fs = new FileService();
         InputStream is = fs.getFileFromResources(fileName);

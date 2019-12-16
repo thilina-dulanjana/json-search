@@ -24,34 +24,51 @@ public class Main {
         String searchTerm = scanner.next();
         System.out.println("Enter search value");
         String searchValue = scanner.next();
-        searchUser(searchTerm, searchValue);
+        switch (response) {
+            case 1: {
+                searchUser(searchTerm, searchValue);
+                break;
+            }
+            default: {
+                System.out.println("Invalid option");
+            }
+        }
+        
     }
 
     private static void searchUser(String searchTerm, String searchValue) {
-        UserService userService = new UserService();
-        List<User> userList = userService.getUserList("jsonStore/users.json");
-        User user = userService.findUser(userList, searchTerm, searchValue);
+        EntityService<User> userService = new UserService();
+        List<User> users = userService.findEntity("jsonStore/users.json", searchTerm, searchValue);
 
-        for (Field field : user.getClass().getDeclaredFields()) {
+        for (User user : users) {            
+            printEntity(user);
+
+            EntityService<Organization> organizationService = new OrganizationService();
+            List<Organization> organizations = organizationService.findEntity("jsonStore/organizations.json", "_id", user.getOrganizationId()+"");
+            for(Organization organization : organizations) {
+                System.out.println("Organization: " + organization.getName());
+            }            
+
+            EntityService<Ticket> ticketService = new TicketService();
+            List<Ticket> tickets = ticketService.findEntity("jsonStore/tickets.json", "submitter_id", user.getId()+"");
+            int index = 0;
+            for (Ticket ticket: tickets) {
+                System.out.printf("Movie Title_%s :%s%n", ++index, ticket.getSubject());
+            }
+        }
+    }
+
+    private static <E> void printEntity(E entity) {
+        for (Field field : entity.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             String name = field.getAnnotation(SerializedName.class).value();
             Object value = null;
             try {
-                value = field.get(user);
+                value = field.get(entity);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
             System.out.printf("%s: %s%n", name, value);
         }
-
-
-        OrganizationService organizationService = new OrganizationService();
-        Organization organization = organizationService.findOrganization("jsonStore/organizations.json", "_id", user.getOrganizationId()+"");
-        System.out.println("Organization: " + organization.getName());
-
-        EntityService ticketService = new TicketService();
-        Entity ticket = ticketService.findEntity("jsonStore/tickets.json", "submitter_id", user.getId()+"");
-        System.out.println("Movie Title :" + ticket.getSubject());
-
     }
 }
