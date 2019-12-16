@@ -17,13 +17,29 @@ public class TicketService implements EntityService<Ticket> {
     @Override
     public List<Ticket> findEntity(String fileName, String searchTerm, String searchValue) {
         List<Ticket> ticketList = getEntityList(fileName);
-        if (searchTerm.equals("submitter_id")) {
-            Integer id = Integer.parseInt(searchValue);
-            return ticketList.stream()
-                    .filter(x -> id.equals(x.getSubmitterId()))
-                    .collect(Collectors.toList());
+        switch (searchTerm) {
+            case "_id": {
+                Integer id = Integer.parseInt(searchValue);
+                return ticketList.stream()
+                        .filter(x -> id.equals(x.getId()))
+                        .collect(Collectors.toList());
+            }
+            case "submitter_id": {
+                Integer id = Integer.parseInt(searchValue);
+                return ticketList.stream()
+                        .filter(x -> id.equals(x.getSubmitterId()))
+                        .collect(Collectors.toList());
+            }
+            case "organization_id": {
+                Integer id = Integer.parseInt(searchValue);
+                return ticketList.stream()
+                        .filter(x -> id.equals(x.getOrganizationId()))
+                        .collect(Collectors.toList());
+            }
+            default: {
+                return null;
+            }
         }
-        return null;
     }
 
     @Override

@@ -28,6 +28,12 @@ public class UserService implements EntityService<User> {
                         .filter(x -> x.getName().toUpperCase().contains(searchValue.toUpperCase()))
                         .collect(Collectors.toList());
             }
+            case "organization_id": {
+                Integer id = Integer.parseInt(searchValue);
+                return userList.stream()
+                        .filter(x -> id.equals(x.getOrganizationId()))
+                        .collect(Collectors.toList());
+            }
             default: {
                 return null;
             }

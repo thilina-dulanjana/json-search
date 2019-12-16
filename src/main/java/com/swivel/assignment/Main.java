@@ -56,7 +56,7 @@ public class Main {
             EntityService<Organization> organizationService = new OrganizationService();
             List<Organization> organizations = organizationService.findEntity("jsonStore/organizations.json", "_id", user.getOrganizationId() + "");
             for (Organization organization : organizations) {
-                System.out.println("Organization: " + organization.getName());
+                System.out.printf("Organization: %s%n", organization.getName());
             }
 
             EntityService<Ticket> ticketService = new TicketService();
@@ -69,7 +69,26 @@ public class Main {
     }
 
     private static void searchOrganization(String searchTerm, String searchValue) {
+        EntityService<Organization> organizationService = new OrganizationService();
+        List<Organization> organizations = organizationService.findEntity("jsonStore/organizations.json", searchTerm, searchValue);
 
+        for (Organization organization : organizations) {
+            printEntity(organization);
+
+            EntityService<User> userService = new UserService();
+            List<User> users = userService.findEntity("jsonStore/users.json", "organization_id", organization.getId() + "");
+            int index = 0;
+            for (User user : users) {
+                System.out.printf("Organization_%s: %s%n ", ++index, user.getName());
+            }
+
+            EntityService<Ticket> ticketService = new TicketService();
+            List<Ticket> tickets = ticketService.findEntity("jsonStore/tickets.json", "organization_id", organization.getId() + "");
+            index = 0;
+            for (Ticket ticket : tickets) {
+                System.out.printf("Movie Title_%s: %s%n", ++index, ticket.getSubject());
+            }
+        }
     }
 
     private static void searchTicket(String searchTerm, String searchValue) {

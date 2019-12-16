@@ -17,15 +17,23 @@ public class OrganizationService implements EntityService<Organization> {
     @Override
     public List<Organization> findEntity(String fileName, String searchTerm, String searchValue) {
         List<Organization> orgList = getEntityList(fileName);
-        if (searchTerm.equals("_id")) {
-            Integer id = Integer.parseInt(searchValue);
+        switch (searchTerm) {
+            case "_id": {
+                Integer id = Integer.parseInt(searchValue);
 
-            List<Organization> orgs = orgList.stream()
-                    .filter(x -> id.equals(x.getId()))
-                    .collect(Collectors.toList());
-            return orgs;
+                return orgList.stream()
+                        .filter(x -> id.equals(x.getId()))
+                        .collect(Collectors.toList());
+            }
+            case "name": {
+                return orgList.stream()
+                        .filter(x -> searchValue.equals(x.getName()))
+                        .collect(Collectors.toList());
+            }
+            default: {
+                return null;
+            }
         }
-        return null;
     }
 
     @Override
