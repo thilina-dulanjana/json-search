@@ -10,12 +10,19 @@ import com.swivel.assignment.service.EntityService;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserService implements EntityService<User> {
+    private static List<String> supportedTerms = new ArrayList(Arrays.asList("_id", "name", "organization_id"));
+
     @Override
     public List<User> findEntity(String fileName, String searchTerm, String searchValue) throws UnsupportedSearchTermException {
+        if (!getSupportedTerms().contains(searchTerm)) {
+            throw new UnsupportedSearchTermException("Unsupported search term " + searchTerm);
+        }
+
         List<User> userList = getEntityList(fileName);
         switch (searchTerm) {
             case "_id": {
@@ -54,5 +61,9 @@ public class UserService implements EntityService<User> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static List<String> getSupportedTerms() {
+        return supportedTerms;
     }
 }

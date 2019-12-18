@@ -11,40 +11,53 @@ import com.swivel.assignment.service.impl.TicketService;
 import com.swivel.assignment.service.impl.UserService;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String intro = "Please select your search criteria\n"
-                + "1. Users\n"
-                + "2. Organizations\n"
-                + "3. Tickets\n";
-        System.out.println(intro);
-        int response = scanner.nextInt();
-        System.out.println("Enter search term");
-        String searchTerm = scanner.next();
-        System.out.println("Enter search value");
-        String searchValue = scanner.next();
-        switch (response) {
-            case 1: {
-                searchUser(searchTerm, searchValue);
-                break;
+        while (true) {
+            String intro = "%nPlease select your search criteria%n"
+                    + "1. Users%n"
+                    + "2. Organizations%n"
+                    + "3. Tickets%n"
+                    + "%nTo view all possible searches type terms%n"
+                    + "To exit the program type exit%n";
+
+            System.out.printf(intro);
+            String response = scanner.next();
+            switch (response) {
+                case "exit": {
+                    System.exit(0);
+                }
+                case "terms": {
+                    showPossiibleTerms();
+                }
             }
-            case 2: {
-                searchOrganization(searchTerm, searchValue);
-                break;
-            }
-            case 3: {
-                searchTicket(searchTerm, searchValue);
-                break;
-            }
-            default: {
-                System.out.println("Invalid option");
+            System.out.println("Enter search terms");
+            String searchTerm = scanner.next();
+            System.out.println("Enter search value");
+            String searchValue = scanner.next();
+            switch (response) {
+                case "1": {
+                    searchUser(searchTerm, searchValue);
+                    break;
+                }
+                case "2": {
+                    searchOrganization(searchTerm, searchValue);
+                    break;
+                }
+                case "3": {
+                    searchTicket(searchTerm, searchValue);
+                    break;
+                }
+                default: {
+                    System.out.println("Invalid option");
+                }
             }
         }
-
     }
 
     private static void searchUser(String searchTerm, String searchValue) {
@@ -143,6 +156,27 @@ public class Main {
                 e.printStackTrace();
             }
             System.out.printf("%s: %s%n", name, value);
+        }
+    }
+
+    private static void showPossiibleTerms() {
+        List<String> terms;
+        terms = UserService.getSupportedTerms();
+        System.out.printf("User Terms%n");
+        for (String term : terms) {
+            System.out.printf("%s%n", term);
+        }
+
+        terms = OrganizationService.getSupportedTerms();
+        System.out.printf("%nOrganization Terms%n");
+        for (String term : terms) {
+            System.out.printf("%s%n", term);
+        }
+
+        terms = TicketService.getSupportedTerms();
+        System.out.printf("%nTicket Terms%n");
+        for (String term : terms) {
+            System.out.printf("%s%n", term);
         }
     }
 }
