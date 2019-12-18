@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.swivel.assignment.entity.User;
+import com.swivel.assignment.exception.UnsupportedSearchTermException;
 import com.swivel.assignment.service.EntityService;
 
 import java.io.*;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class UserService implements EntityService<User> {
     @Override
-    public List<User> findEntity(String fileName, String searchTerm, String searchValue) {
+    public List<User> findEntity(String fileName, String searchTerm, String searchValue) throws UnsupportedSearchTermException {
         List<User> userList = getEntityList(fileName);
         switch (searchTerm) {
             case "_id": {
@@ -35,7 +36,7 @@ public class UserService implements EntityService<User> {
                         .collect(Collectors.toList());
             }
             default: {
-                return null;
+                throw new UnsupportedSearchTermException("Unsupported search term " + searchTerm);
             }
         }
     }
