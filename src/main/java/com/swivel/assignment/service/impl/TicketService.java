@@ -19,9 +19,8 @@ public class TicketService implements EntityService<Ticket> {
         List<Ticket> ticketList = getEntityList(fileName);
         switch (searchTerm) {
             case "_id": {
-                Integer id = Integer.parseInt(searchValue);
                 return ticketList.stream()
-                        .filter(x -> id.equals(x.getId()))
+                        .filter(x -> searchValue.equals(x.getId()))
                         .collect(Collectors.toList());
             }
             case "submitter_id": {
@@ -34,6 +33,11 @@ public class TicketService implements EntityService<Ticket> {
                 Integer id = Integer.parseInt(searchValue);
                 return ticketList.stream()
                         .filter(x -> id.equals(x.getOrganizationId()))
+                        .collect(Collectors.toList());
+            }
+            case "subject": {
+                return ticketList.stream()
+                        .filter(x -> x.getSubject().toUpperCase().contains(searchValue.toUpperCase()))
                         .collect(Collectors.toList());
             }
             default: {

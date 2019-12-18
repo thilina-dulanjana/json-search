@@ -92,7 +92,31 @@ public class Main {
     }
 
     private static void searchTicket(String searchTerm, String searchValue) {
+        EntityService<Ticket> ticketService = new TicketService();
+        List<Ticket> tickets = ticketService.findEntity("jsonStore/tickets.json", searchTerm, searchValue);
 
+        for (Ticket ticket : tickets) {
+            printEntity(ticket);
+
+            EntityService<User> userService = new UserService();
+            List<User> users = userService.findEntity("jsonStore/users.json", "_id", ticket.getAssigneeId() + "");
+            int index = 0;
+            for (User user : users) {
+                System.out.printf("Assignee_%s: %s%n ", ++index, user.getName());
+            }
+
+            users = userService.findEntity("jsonStore/users.json", "_id", ticket.getSubmitterId() + "");
+            index = 0;
+            for (User user : users) {
+                System.out.printf("Submitter_%s: %s%n ", ++index, user.getName());
+            }
+
+            EntityService<Organization> organizationService = new OrganizationService();
+            List<Organization> organizations = organizationService.findEntity("jsonStore/organizations.json", "_id", ticket.getOrganizationId() + "");
+            for (Organization organization : organizations) {
+                System.out.printf("Organization: %s%n", organization.getName());
+            }
+        }
     }
 
     private static <E> void printEntity(E entity) {
