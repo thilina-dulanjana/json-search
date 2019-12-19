@@ -11,7 +11,6 @@ import com.swivel.assignment.service.impl.TicketService;
 import com.swivel.assignment.service.impl.UserService;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,6 +33,7 @@ public class Main {
                 }
                 case "terms": {
                     showPossiibleTerms();
+                    continue;
                 }
             }
             System.out.println("Enter search terms");

@@ -35,7 +35,7 @@ public class OrganizationService implements EntityService<Organization> {
             }
             case "name": {
                 return orgList.stream()
-                        .filter(x -> searchValue.equals(x.getName()))
+                        .filter(x ->x.getName().toUpperCase().contains(searchValue.toUpperCase()))
                         .collect(Collectors.toList());
             }
             default: {
