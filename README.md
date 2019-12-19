@@ -8,7 +8,7 @@ This application facilitates user to search allowed serach terms of predifined j
 # Set Up
 * git clone the repository
 * run terminal command `maven clean install` in the project root directory
-* move in to the target folder inside the project folder. only execute the jar with *jar-with-dependencies* extension using the terminal command `java -jar name_of_the_jar.jar
+* move in to the target folder inside the project folder. only execute the jar with *jar-with-dependencies* extension using the terminal command `java -jar name_of_the_jar.jar`
 * follow on screen commands
 
 # Future Improvements
